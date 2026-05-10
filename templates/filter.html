@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Filter Startups</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Filter Startups</h1>
+
+    <form method="POST">
+      <input type="text" name="company" placeholder="Enter Company">
+      <input type="text" name="city" placeholder="Enter City">
+      <input type="text" name="investor" placeholder="Enter Investor">
+      <input type="text" name="industry" placeholder="Enter Industry">
+      <input type="text" name="year" placeholder="Enter Year">
+      <button type="submit">Filter</button>
+    </form>
+
+    {% if startups %}
+    <table>
+      <thead>
+        <tr>
+          <th>Startup Name</th>
+          <th>City</th>
+          <th>Industry</th>
+          <th>Funding (USD)</th>
+          <th>Investors</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in startups %}
+        <tr>
+          <td>{{ s["Startup Name"] }}</td>
+          <td>{{ s["City"] }}</td>
+          <td>{{ s["Industry Vertical"] }}</td>
+          <td>{{ s["Amount in USD"] | format_amount }}</td>
+          <td>{{ s["Investor Name"] }}</td>
+          <td>{{ s["Date"] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</body>
+</html>

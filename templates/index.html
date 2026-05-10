@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Indian Startups Funding Analysis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+    <h1>Indian Startups Funding Analysis</h1>
+
+    <div class="insights">
+      <div class="card">💰 Total Funding: ${{ total_funding | format_amount }}</div>
+      <div class="card">🚀 Startups Tracked: {{ total_startups }}</div>
+      <div class="card">🤝 Unique Investors: {{ total_investors }}</div>
+    </div>
+
+    <div class="nav">
+      <a href="{{ url_for('dashboard') }}">View Dashboard</a>
+      <a href="{{ url_for('filter_page') }}">Filter Startups</a>
+    </div>
+
+    <div class="insight-paragraph">
+  <p>
+    Over the years, Indian startups have raised a remarkable 
+    <strong>${{ total_funding | format_amount }}</strong> in total funding. 
+    Currently, the ecosystem tracks <strong>{{ total_startups }}</strong> innovative companies, 
+    supported by <strong>{{ total_investors }}</strong> unique investors. 
+    The average deal size stands at <strong>${{ avg_deal | format_amount }}</strong>, 
+    highlighting the confidence investors have in the market. 
+    The <strong>{{ top_industry }}</strong> sector continues to dominate as the most funded industry, 
+    while <strong>{{ top_startup }}</strong> emerges as one of the leading startups attracting major capital. 
+    Interestingly, the year <strong>{{ max_year }}</strong> witnessed the highest overall funding, 
+    marking it as a peak in investor activity.
+  </p>
+</div>
+
+<div class="extra-insights">
+  <div class="insight-card">
+    <h4>📊 Average Deal Size</h4>
+    <p>${{ avg_deal | format_amount }}</p>
+  </div>
+  <div class="insight-card">
+    <h4>🏆 Top Startup</h4>
+    <p>{{ top_startup }}</p>
+  </div>
+  <div class="insight-card">
+    <h4>🏭 Leading Industry</h4>
+    <p>{{ top_industry }}</p>
+  </div>
+  <div class="insight-card">
+    <h4>📅 Best Year</h4>
+    <p>{{ max_year }}</p>
+  </div>
+</div>
+
+<!-- Mini Trends -->
+<div class="mini-trend">
+  <h4>📈 Funding Trend Preview</h4>
+  <div id="funding-sparkline"></div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  var sparkData = {
+    x: {{ funding_trends | tojson | safe }}.map(d => d.Date),
+    y: {{ funding_trends | tojson | safe }}.map(d => d["Amount in USD"]),
+    type: 'scatter',
+    mode: 'lines',
+    line: {color: '#6a1b9a', width: 2}
+  };
+
+  var layout = {
+    margin: {l: 20, r: 20, t: 20, b: 20},
+    height: 150,
+    xaxis: {visible: false},
+    yaxis: {visible: false}
+  };
+
+  Plotly.newPlot('funding-sparkline', [sparkData], layout, {displayModeBar: false});
+</script>
+
+  </div>  
+</body>
+</html>

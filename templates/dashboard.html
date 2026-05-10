@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Indian Startups Funding Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9fc;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .kpi-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .kpi-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 20%;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+    }
+    .chart-box {
+      background: white;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Indian Startups Funding Dashboard</h1>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-container">
+    <div class="kpi-card">
+      <h3>Total Funding</h3>
+      <p>${{ total_funding | format_amount }}</p>
+    </div>
+    <div class="kpi-card">
+      <h3>Total Startups</h3>
+      <p>{{ total_startups }}</p>
+    </div>
+    <div class="kpi-card">
+      <h3>Total Investors</h3>
+      <p>{{ total_investors }}</p>
+    </div>
+    <div class="kpi-card">
+      <h3>Avg Deal Size</h3>
+      <p>${{ avg_deal | format_amount }}</p>
+    </div>
+  </div>
+
+  <!-- CHARTS GRID -->
+  <div class="charts-grid">
+    <div class="chart-box" id="funding-trends"></div>
+    <div class="chart-box" id="funding-industry"></div>
+    <div class="chart-box" id="funding-cities"></div>
+    <div class="chart-box" id="investor-top"></div>
+  </div>
+
+  <script>
+    // Funding Trends
+    var fundingTrends = {
+      x: {{ funding_trends | tojson | safe }}.map(d => d.Year),
+      y: {{ funding_trends | tojson | safe }}.map(d => d["Amount in USD"]),
+      type: 'scatter',
+      mode: 'lines+markers',
+      line: {color: '#6a1b9a'}
+    };
+    Plotly.newPlot('funding-trends', [fundingTrends],
+     {title: "Funding Trends Over Time"});
+
+    // Funding by Industry
+    var industry = {{ top_industries | tojson | safe }};
+    var industryTrace = {
+      x: industry.map(d => d["Industry Vertical"]),
+      y: industry.map(d => d["Amount in USD"]),
+      type: 'bar',
+      marker: {color: '#ff7043'}
+    };
+    Plotly.newPlot('funding-industry', [industryTrace], {title: "Top Industries by Funding"});
+
+    // Top Cities
+    var cities = {{ top_cities | tojson | safe }};
+    var cityTrace = {
+      labels: cities.map(d => d.City),
+      values: cities.map(d => d["Amount in USD"]),
+      type: 'pie',
+      hole: 0.4
+    };
+    Plotly.newPlot('funding-cities', [cityTrace], {title: "Top Cities for Startups"});
+
+    // Top Investors
+    var investors = {{ top_investors | tojson | safe }};
+    var invTrace = {
+      x: investors.map(d => d["Investor Name"]),
+      y: investors.map(d => d["Amount in USD"]),
+      type: 'bar',
+      marker: {color: '#42a5f5'}
+    };
+    Plotly.newPlot('investor-top', [invTrace], {title: "Top Investors"});
+  </script>
+
+</body>
+</html>
