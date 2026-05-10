@@ -3,6 +3,7 @@
 <br>
     A Real-Time Web Application that shows startups funding city-wise,industry-wise, etc.
 <br>
+
 2.About the Project
 <br>
     The Indian startup ecosystem has grown rapidly over the last decade, with massive investments flowing into sectors such as FinTech, EdTech, HealthTech, E-commerce, and AI. This project, Indian Startups Funding Analysis, focuses on presenting these funding patterns through an interactive and user-friendly web application. The goal is to provide insights into how investments have shaped the startup ecosystem from 2015 to 2025
